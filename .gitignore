@@ -1,0 +1,127 @@
+/*Carrera Anderson
+  Juegos con LCD
+  22/12/2016
+  
+ 
+  
+*/
+
+
+#include<LiquidCrystal.h>
+LiquidCrystal lcd (9, 8, 7, 6, 5, 4);
+String dato; 
+int tam; 
+
+void setup() {
+  Serial.begin(9600);
+  lcd.begin(16, 2);
+  
+}
+
+void loop() {
+  
+    if (Serial.available() > 0) {
+      lcd.clear();
+      grabar();
+      start();
+      Serial.println("");
+    }
+
+}
+
+
+
+//Metodo para ingresar el juego que queremos vizualizar
+void start() {
+  char letra;//Variable con la que compararemos la opción ingresada
+  Serial.println("Elija un juego (A,B;C):");
+  espera();
+  letra = Serial.read();
+  if (( letra== 'A') || (letra== 'a')) {
+    forma1();
+  }
+  else {
+    if ((letra== 'B') || (letra == 'b')) {
+      forma2();
+    }
+    else {
+      if ((letra == 'C') || (letra == 'c')) {
+        forma3();
+      }
+      else {
+        Serial.println(" ");
+        grabar();
+      }
+    }
+  }
+}
+//Metodo para grabar la palabra ingresada
+void grabar() {
+  Serial.println("Ingrese la palabra a visualizarce en el LCD");
+  espera();
+  dato = Serial.readString();
+  tam = dato.length();
+  Serial.println("");
+}
+void espera() {
+  do{
+  }while(Serial.available() == 0 ) ;
+}
+
+//Juego 1
+void forma1() {
+  int i = 0;
+  int j = 0;
+  char palabra[tam];
+  dato.toCharArray(palabra, tam + 1);
+ 
+    for (i=0; i < tam; i++) {
+    lcd.setCursor(i, j);
+    lcd.print(palabra[i]);
+    }
+ 
+  lcd.clear();//Limpia la pantalla del LCD
+}
+
+
+//Juego 2
+ void forma2(){
+    int i = 0;
+  int j = 0;
+  char palabra[tam];
+  dato.toCharArray(palabra, tam + 1);
+    for (i=tam; i >= 0; i--) {
+     
+      lcd.setCursor(i, j);
+      lcd.print(palabra[i]);
+      delay(500);
+      lcd.setCursor(i, j);
+      lcd.print(" ");
+    }
+     lcd.clear();//Limpia la pantalla del LCD
+     }
+//Juego 3
+
+void forma3(){
+  int i=0;
+  int j = 0;
+  char palabra[tam];
+     for (i=0; i < tam; i++) {
+      j = 1 - j;
+      lcd.setCursor(i, j);
+      lcd.print(palabra[i]);
+      delay(200);
+      lcd.setCursor(i, j);
+     
+    }
+    for (i= tam; i >= 0; i--) {
+      j = 1 - j;
+      lcd.setCursor(i, j);
+      lcd.print(palabra[i]);
+      delay(200);
+      lcd.setCursor(i, j);
+      lcd.print(" ");
+    }
+  }
+
+
